@@ -22,8 +22,8 @@ const ProductSchema = mongoose.Schema({
         type: String,
         required: true,
         enum: {
-            value: ["kg", "litre", "pcs"],
-            message: " Unit value must be kg/liter/pcs "
+            values: ["kg", "litre", "pcs"],
+            message: " Unit values must be kg/liter/pcs "
         },
     },
     quantity: {
@@ -31,8 +31,8 @@ const ProductSchema = mongoose.Schema({
         required: true,
         min: 0,
         validate: {
-            validator: (value) => {
-                const isNumber = Number.isInteger(value);
+            validator: (values) => {
+                const isNumber = Number.isInteger(values);
                 if (isNumber) {
                     return true
                 } else {
@@ -46,7 +46,7 @@ const ProductSchema = mongoose.Schema({
         type: String,
         required: true,
         enum: {
-            value: ["available", "out of stock", "discontinued"],
+            values: ["available", "out of stock", "discontinued"],
             message: " Status can't be {VALUE}"
         }
     },
@@ -65,7 +65,9 @@ const ProductSchema = mongoose.Schema({
 },
 {
     timestamps: true
-})
+});
+
+module.exports = ProductSchema;
 
 
 
