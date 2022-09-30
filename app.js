@@ -62,16 +62,29 @@ const ProductSchema = mongoose.Schema({
     timestamps: true
   });
 
+ProductSchema.pre('save', function (next) {
+  if (this.quantity === 0) {
+    this.status = "out of stock"
+  }
+  console.log("Before Enter to the Schema");
+  next()
+})
+
+ProductSchema.post('save', function (doc, next) {
+  console.log("After Enter to the Schema");
+  next()
+})
 
 const Product = mongoose.model('Product', ProductSchema)
+
 
 app.post('/api/v1/product', async (req, res, next) => {
 
   try {
     const product = new Product(req.body);
-    if (product.quantity === 0) {
-      product.status = "out of stock"
-    }
+    // if (product.quantity === 0) {
+    //   product.status = "out of stock"
+    // }
     const result = await product.save();
     res.status(200).send({ status: true, message: "Product save to db", data: result });
   } catch (error) {
