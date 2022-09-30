@@ -65,12 +65,25 @@ const ProductSchema = mongoose.Schema({
 
 const Product = mongoose.model('Product', ProductSchema)
 
-app.post('/api/v1/product', (req, res, next) => {
-  const product = new Product(req.body);
-  console.log(req.body);
-  product.save()
-  res.status(200).send({ status: true, message: "Product save to db" });
+app.post('/api/v1/product', async (req, res, next) => {
+
+  try {
+    const product = new Product(req.body);
+    if (product.quantity === 0) {
+      product.status = "out of stock"
+    }
+    const result = await product.save();
+    res.status(200).send({ status: true, message: "Product save to db", data: result });
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: " Product Can't Update ",
+      error: error.message
+    })
+  }
+
 })
+
 
 app.get("/", (req, res) => {
   res.send("Route is working! YaY!");
